@@ -67,9 +67,12 @@ Description: ${request.jobDescription}
 
 Write a brief cover letter for ${name} applying to "${request.jobTitle}" at ${request.companyName}. Constraints:
 - No storytelling. Straightforward.
-- Tone: professional, friendly, concise (strict but warm).
+- Tone: professional, friendly, concise. Strict but warm.
 - Length: 2 short paragraphs, 6–8 sentences total max.
-- No buzzwords (synergy, passion, cutting-edge, cross-functional, results-driven, proven ability, innovative, dynamic, leverage, excellence).
+- Vary sentence length. Let some sentences be short. Use contractions naturally.
+- NEVER use em dashes or en dashes (the "—" or "–" characters). NEVER use parentheses or square brackets. If you need a pause, use a comma or start a new sentence.
+- No buzzwords: synergy, passion, cutting-edge, cross-functional, results-driven, proven ability, innovative, dynamic, leverage, excellence.
+- No AI-tell transitions: moreover, furthermore, additionally, delve, navigate, landscape, testament. No forced three-item lists.
 - If the description mentions "hybrid" or "onsite", add one sentence about enjoying working in-office.
 - Hint at willingness to put in extra effort when needed, WITHOUT saying "overtime" or synonyms.
 - Focus on how ${name} can help right now using their experience.
@@ -92,7 +95,7 @@ ${name.split(' ')[0]}`;
         {
           role: 'system',
           content:
-            'Write concise, human cover letters: no storytelling, no buzzwords, friendly but strict tone, 1–2 short paragraphs, subtle humour only when natural. Avoid AI-sounding phrases.',
+            'You write cover letters that read like a real person wrote them, not an AI. Plain, direct language. Vary sentence length: mix short, punchy sentences with longer ones. Use contractions (I\'m, I\'ve, you\'re). No storytelling, no buzzwords, no clichés, no inflated transitions (moreover, furthermore, additionally, in today\'s world), no forced three-item lists, no "not only… but also" or "it\'s not just X, it\'s Y" constructions. Friendly but strict tone, 1–2 short paragraphs, subtle humour only when natural. HARD RULES: never use em dashes or en dashes (— –) anywhere; never use parentheses or brackets of any kind. Rewrite the sentence with commas or split it in two instead.',
         },
         { role: 'user', content: prompt },
       ],
@@ -184,7 +187,9 @@ EXPERIENCE:
 - Use the candidate's actual roles, companies and dates.
 - For each role: produce a one-line italic subtitle that describes the company (e.g. "Consulting and development agency", "Decentralized finance startup"). Infer from context if not provided.
 - Limit to 4–5 bullets per role; pick the most relevant to the target job.
-- Bullets are concise outcome-focused statements with numbers when possible.
+- Bullets are concise, outcome-focused statements with numbers when possible.
+- Start each bullet with a strong, plain past-tense verb. Vary the openers; never repeat the same verb twice in a row.
+- Write bullets the way a real engineer would, not an AI. Plain, direct, specific. No clichés, no filler, no inflated transitions.
 
 PROJECTS:
 - Only include if the candidate listed personal projects above.
@@ -199,6 +204,8 @@ ${skillsToInclude.join(', ')}
 Rules:
 - ATS-friendly language. No colors, no markdown.
 - Focus on quantifiable achievements matching job requirements.
+- In every piece of generated text (summary, bullets, subtitles): NEVER use em dashes or en dashes (the "—" or "–" characters), and NEVER use parentheses or square brackets. Rephrase with a comma or split into two statements instead.
+- No buzzwords (synergy, results-driven, proven ability, leverage, dynamic, innovative, cutting-edge) and no AI-tell words (moreover, furthermore, additionally, delve, navigate, landscape, testament). No forced three-item lists.
 
 IMPORTANT: Return ONLY the JSON object below, no markdown formatting, no code blocks, no additional text:
 
@@ -273,7 +280,7 @@ IMPORTANT: Return ONLY the JSON object below, no markdown formatting, no code bl
         {
           role: 'system',
           content:
-            'You are an expert CV writer who creates professional, ATS-friendly resumes tailored to specific roles. Return ONLY valid JSON without any markdown formatting, code blocks, or additional text.',
+            'You are an expert CV writer who creates professional, ATS-friendly resumes tailored to specific roles. Write like a real person, not an AI: plain, direct, specific language with no clichés or buzzwords. HARD RULES for all generated text: never use em dashes or en dashes (— –), and never use parentheses or brackets; rephrase with commas or split the sentence. Return ONLY valid JSON without any markdown formatting, code blocks, or additional text.',
         },
         { role: 'user', content: prompt },
       ],

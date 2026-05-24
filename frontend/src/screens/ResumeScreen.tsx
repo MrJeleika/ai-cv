@@ -152,6 +152,12 @@ export function ResumeScreen() {
             >
               <Icon name="restart_alt" size={16} /> Reset
             </button>
+            <button
+              onClick={startOver}
+              className="px-4 border-r border-[var(--ink)] text-[11px] uppercase tracking-[0.12em] font-semibold text-secondary hover:text-[var(--ink)] flex items-center gap-1.5"
+            >
+              <Icon name="ink_eraser" size={16} /> Clear
+            </button>
           </>
         }
       />

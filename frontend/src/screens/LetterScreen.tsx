@@ -7,7 +7,6 @@ import { useToast } from '../components/chrome/ToastStack';
 import { PipelineView } from '../components/wizard/PipelineView';
 import { PipelineStage, usePipelineRun } from '../lib/usePipelineRun';
 import {
-  downloadCoverLetterPdf,
   downloadCustomCoverLetterPdf,
   fetchProfile,
   getCoverLetter,
@@ -159,12 +158,20 @@ export function LetterScreen() {
         title="Cover Letter"
         breadcrumbs={['WORKSPACE', 'DRAFT / CORRESPONDENCE']}
         right={
-          <button
-            onClick={restart}
-            className="px-4 border-r border-[var(--ink)] text-[11px] uppercase tracking-[0.12em] font-semibold text-secondary hover:text-[var(--ink)] flex items-center gap-1.5"
-          >
-            <Icon name="restart_alt" size={16} /> Reset
-          </button>
+          <>
+            <button
+              onClick={restart}
+              className="px-4 border-r border-[var(--ink)] text-[11px] uppercase tracking-[0.12em] font-semibold text-secondary hover:text-[var(--ink)] flex items-center gap-1.5"
+            >
+              <Icon name="restart_alt" size={16} /> Reset
+            </button>
+            <button
+              onClick={startOver}
+              className="px-4 border-r border-[var(--ink)] text-[11px] uppercase tracking-[0.12em] font-semibold text-secondary hover:text-[var(--ink)] flex items-center gap-1.5"
+            >
+              <Icon name="ink_eraser" size={16} /> Clear
+            </button>
+          </>
         }
       />
 
@@ -283,24 +290,30 @@ interface BriefStepProps {
 }
 
 function BriefStep(props: BriefStepProps) {
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: fetchProfile,
+    staleTime: 60_000,
+  });
   const ready =
     props.company.trim() && props.role.trim() && props.jobDescription.trim();
   return (
-    <div className="overflow-y-auto p-5 md:p-10 space-y-6 md:space-y-8 custom-scrollbar h-full">
-      <div className="max-w-3xl">
-        <div className="text-[10px] mono uppercase tracking-[0.18em] text-secondary mb-2">
-          STEP 01 · BRIEF
+    <div className="grid lg:grid-cols-[1fr_360px] h-full overflow-hidden">
+      <div className="overflow-y-auto p-5 md:p-10 space-y-6 md:space-y-8 custom-scrollbar">
+        <div>
+          <div className="text-[10px] mono uppercase tracking-[0.18em] text-secondary mb-2">
+            STEP 01 · BRIEF
+          </div>
+          <h2 className="text-headline-lg uppercase tracking-[-0.02em] font-medium mb-2">
+            Address the company.
+          </h2>
+          <p className="text-sm text-secondary max-w-xl leading-relaxed">
+            Company name + posting. We'll match it against your profile and
+            draft a letter in your voice.
+          </p>
         </div>
-        <h2 className="text-headline-lg uppercase tracking-[-0.02em] font-medium mb-2">
-          Address the company.
-        </h2>
-        <p className="text-sm text-secondary max-w-xl leading-relaxed">
-          Company name + posting. We'll match it against your profile and draft
-          a letter in your voice.
-        </p>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-x-6 gap-y-4 max-w-3xl">
+        <div className="grid md:grid-cols-2 gap-x-6 gap-y-4">
         <div>
           <label className="text-[10px] mono uppercase tracking-[0.18em] text-secondary block mb-1">
             Company · Required
@@ -360,7 +373,7 @@ function BriefStep(props: BriefStepProps) {
         )}
       </div>
 
-      <div className="max-w-3xl">
+      <div>
         <div className="flex items-baseline justify-between mb-2">
           <label className="text-[10px] mono uppercase tracking-[0.18em] text-secondary">
             Job description · Required
@@ -378,7 +391,7 @@ function BriefStep(props: BriefStepProps) {
         />
       </div>
 
-      <div className="max-w-3xl">
+      <div>
         <div className="flex items-baseline justify-between mb-2">
           <label className="text-[10px] mono uppercase tracking-[0.18em] text-secondary">
             AI tone
@@ -403,21 +416,41 @@ function BriefStep(props: BriefStepProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 pt-4 border-t border-[var(--ink)] max-w-3xl">
-        <button
-          onClick={props.onStart}
-          disabled={!ready}
-          className="bg-[var(--ink)] text-[var(--paper)] px-6 py-3 text-[11px] uppercase tracking-[0.18em] font-bold disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
-        >
-          <Icon name="auto_awesome" size={16} fill={1} />
-          Draft letter →
-        </button>
-        {!ready && (
-          <span className="text-[11px] mono uppercase tracking-[0.12em] text-secondary">
-            Company, role, and description required
-          </span>
-        )}
+        <div className="flex items-center gap-3 pt-4 border-t border-[var(--ink)]">
+          <button
+            onClick={props.onStart}
+            disabled={!ready}
+            className="bg-[var(--ink)] text-[var(--paper)] px-6 py-3 text-[11px] uppercase tracking-[0.18em] font-bold disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <Icon name="auto_awesome" size={16} fill={1} />
+            Draft letter →
+          </button>
+          {!ready && (
+            <span className="text-[11px] mono uppercase tracking-[0.12em] text-secondary">
+              Company, role, and description required
+            </span>
+          )}
+        </div>
       </div>
+
+      <aside className="hidden lg:block border-l border-[var(--ink)] bg-surface-container-low p-10 overflow-y-auto custom-scrollbar">
+        <div className="text-[10px] mono uppercase tracking-[0.18em] text-secondary mb-3">
+          USING · PROFILE
+        </div>
+        <div className="border border-[var(--ink)] p-4 bg-[var(--paper)]">
+          <div className="text-[13px] font-semibold">
+            {profile?.full_name ?? '—'}
+          </div>
+          <div className="text-[11px] text-secondary mt-1">
+            {profile?.title ?? '—'}
+          </div>
+          <div className="mt-3 text-[11px] text-secondary mono">
+            {profile?.skills.length ?? 0} skills ·{' '}
+            {profile?.experience.length ?? 0} entries ·{' '}
+            {profile?.education.length ?? 0} education
+          </div>
+        </div>
+      </aside>
     </div>
   );
 }
@@ -532,15 +565,10 @@ function ProofStep({
   const exportPdf = async () => {
     setExporting(true);
     try {
-      if (editing && text !== initialText) {
-        await downloadCustomCoverLetterPdf(text, company);
-      } else {
-        await downloadCoverLetterPdf({
-          jobTitle: role,
-          companyName: company,
-          jobDescription,
-        });
-      }
+      // Always export the exact text shown in the proof. Re-generating from the
+      // brief would produce a different letter than the one on screen.
+      const finalText = editing && text !== initialText ? text : initialText;
+      await downloadCustomCoverLetterPdf(finalText, company);
       toast.push({ title: 'PDF downloading', icon: 'picture_as_pdf' });
     } catch (err) {
       console.error(err);
