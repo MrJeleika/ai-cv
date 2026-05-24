@@ -5,6 +5,9 @@ dist
 tmp
 out-tsc
 
+# wrangler / cloudflare
+.wrangler
+
 # dependencies
 node_modules
 

@@ -50,7 +50,8 @@
     "vite": "^6.0.0",
     "vitest": "^3.2.4",
     "webpack": "^5.100.2",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "wrangler": "^4.92.0"
   },
   "scripts": {
     "start": "node dist/backend/main.js",
@@ -59,6 +60,8 @@
     "build:backend": "npx nx build backend",
     "build:frontend": "npx nx build frontend",
     "build:all": "npx nx run-many -t build",
+    "deploy:frontend": "npx nx build frontend && wrangler deploy -c frontend/wrangler.jsonc",
+    "preview:frontend": "npx nx build frontend && wrangler dev -c frontend/wrangler.jsonc",
     "dev:backend": "npx nx serve backend",
     "dev:frontend": "npx nx serve frontend",
     "dev": "npx nx run-many -t serve",
