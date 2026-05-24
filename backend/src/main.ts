@@ -16,8 +16,20 @@ import { AppModule } from './app/app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Allowed browser origins: localhost for dev, the production frontend, plus
+  // any extra origins from FRONTEND_ORIGIN (comma-separated, e.g. CF preview URLs).
+  // Origins must have no trailing slash/path — match the browser's Origin header.
+  const allowedOrigins = [
+    'http://localhost:4200',
+    'http://localhost:3000',
+    'https://ai-cv.jeleika.com',
+    ...(process.env.FRONTEND_ORIGIN?.split(',')
+      .map((o) => o.trim())
+      .filter(Boolean) ?? []),
+  ];
+
   app.enableCors({
-    origin: ['http://localhost:4200', 'http://localhost:3000'],
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
