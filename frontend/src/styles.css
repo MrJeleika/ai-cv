@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #1b1b1b;
+  --paper: #f9f9f9;
+  --accent: #1b1b1b;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Folder tab clip */
+.folder-tab-r {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 100%, 0 100%);
+}
+.folder-tab-l {
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%);
+}
+.folder-tab-both {
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 100%, 0 100%);
+}
+
+/* Grid paper backgrounds */
+.grid-paper {
+  background-image:
+    linear-gradient(to right, rgba(27, 27, 27, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 27, 27, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.grid-paper-dense {
+  background-image:
+    linear-gradient(to right, rgba(27, 27, 27, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 27, 27, 0.05) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.ink {
+  border-color: var(--ink) !important;
+}
+
+.accent-bg {
+  background: var(--accent);
+}
+
+.accent-text {
+  color: var(--accent);
+}
+
+.accent-border {
+  border-color: var(--accent);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #7a7a72;
+  border-radius: 0;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--ink);
+}
+
+/* Caret blink */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: blink 1s steps(1) infinite;
+}
+
+/* Marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  animation: marquee 60s linear infinite;
+}
+
+/* Stamp */
+.stamp {
+  transform: rotate(-6deg);
+  border: 2px solid currentColor;
+  padding: 2px 8px;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  display: inline-block;
+}
+
+/* Diagonal stripe pattern */
+.stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0,
+    transparent 8px,
+    rgba(27, 27, 27, 0.08) 8px,
+    rgba(27, 27, 27, 0.08) 9px
+  );
+}
+
+/* Bar hover (for charts) */
+.bar {
+  transition:
+    background 200ms,
+    transform 200ms;
+  transform-origin: bottom;
+}
+.bar:hover {
+  background: var(--ink);
+  transform: scaleY(1.04);
+}
+
+/* Density variations */
+body[data-density='compact'] {
+  --row-py: 0.5rem;
+  --pad-card: 1rem;
+}
+body[data-density='comfortable'] {
+  --row-py: 0.875rem;
+  --pad-card: 1.5rem;
+}
+body[data-density='spacious'] {
+  --row-py: 1.25rem;
+  --pad-card: 2rem;
+}
+.row-pad {
+  padding-top: var(--row-py);
+  padding-bottom: var(--row-py);
+}
+.card-pad {
+  padding: var(--pad-card);
+}
+
+/* Dark mode (inverted ink) */
+body[data-mode='dark'] {
+  --ink: #f1f1f1;
+  --paper: #161616;
+}
+body[data-mode='dark'] .invert-on-dark {
+  filter: invert(1);
+}
+
+/* Page transitions */
+.fade-in {
+  animation: fade 320ms ease-out;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Check-mark pop (used when a pipeline stage flips to "done") */
+.check-pop {
+  display: inline-flex;
+  animation: check-pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
